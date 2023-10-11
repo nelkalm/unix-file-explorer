@@ -2,13 +2,14 @@
 #include <string.h>
 #include <stdlib.h>
 #include "../include/navigation.h"
+#include "../include/file_operations.h"
 
 /**
  * @brief The entry point of the Unix-like File Explorer program.
  *
- * Allows users to execute specific commands related to directory navigation
- * directly from the shell prompt. Currently supports changing directories and
- * fetching the current directory.
+ * Allows users to execute specific commands related to directory navigation, file
+ * operations directly from the shell prompt. Currently supports changing directories and
+ * fetching the current directory, reading files and writing contents to file.
  *
  * @param argc The number of arguments passed to the program.
  * @param argv An array of strings representing each argument.
@@ -19,6 +20,8 @@
  * @post Depending on the command provided:
  *      - "-cd": Changes the working directory to the provided path.
  *      - "-pwd": Prints the current working directory to the standard output.
+ *      - "-read": Reading file content.
+ *      - "-write": Writing content that was read to a specific file.
  *      - No recognized command: Prints usage help.
  *
  * @return Returns 0 if the program executed successfully.
@@ -32,6 +35,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    // Conditionals related to directory navigation
     if (strcmp(argv[1], "-cd") == 0)
     {
         if (argc < 3)
@@ -52,9 +56,30 @@ int main(int argc, char *argv[])
             free(path);
         }
     }
+
+    // Conditionals related to reading and writing files
+    if (strcmp(argv[1], "-read") == 0)
+    {
+        if (argc < 3)
+        {
+            printf("Please provide a filename to read.\n");
+            return 1;
+        }
+        read_file(argv[2]);
+    }
+    else if (strcmp(argv[1], "-write") == 0)
+    {
+        if (argc < 4)
+        {
+            printf("Please provide a filename and content to write.\n");
+            return 1;
+        }
+        write_file(argv[2], argv[3]);
+    }
     else
     {
         printf("Unknown argument. Use --help for usage information.\n");
     }
+
     return 0;
 }
